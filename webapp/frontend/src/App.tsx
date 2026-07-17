@@ -69,23 +69,9 @@ function LayoutShell() {
       {/* MAIN VIEW CONTENT WORKSPACE */}
       <main className="flex-1 flex flex-col overflow-hidden bg-rpg-bg">
         
-        {/* TOP HUD HEADER BAR */}
-        <header className="bg-rpg-dark/60 border-b border-rpg-border p-4 flex justify-between items-center relative z-40">
+        {/* TOP CONTROLS ROW */}
+        <div className="p-4 flex justify-between items-center bg-transparent border-0 relative z-40">
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded bg-rpg-dark border border-rpg-gold text-rpg-gold shadow-rpg-glow">
-                <Shield className="w-5 h-5 animate-pulse" />
-              </div>
-              <div className="hidden sm:block">
-                <h1 className="text-sm font-extrabold tracking-widest text-white uppercase">
-                  QuestDemics
-                </h1>
-                <span className="text-[9px] font-mono text-rpg-gold uppercase tracking-wider block">
-                  System Active
-                </span>
-              </div>
-            </div>
-
             {/* SCREEN SWITCHER BUTTON (ROUNDED RECTANGLE) */}
             <div className="relative">
               <button 
@@ -145,13 +131,13 @@ function LayoutShell() {
           
           <div className="flex items-center gap-4">
             {/* Quick Stats Panel */}
-            <div className="flex items-center gap-3 text-[11px] font-mono bg-rpg-dark/80 border border-rpg-border/80 px-3 py-1.5 rounded">
-              <div className="flex items-center gap-1">
+            <div className="flex items-center gap-3 text-[11px] font-mono bg-rpg-dark/80 border border-rpg-border px-3 py-2 rounded-lg shadow-sm">
+              <div className="flex items-center gap-1.5">
                 <Flame className="w-3.5 h-3.5 text-orange-500" />
                 <span className="text-gray-300 font-bold">{user.streak}D</span>
               </div>
               <div className="w-px h-3 bg-rpg-border" />
-              <div className="flex items-center gap-1 text-rpg-gold">
+              <div className="flex items-center gap-1.5 text-rpg-gold">
                 <ShoppingBag className="w-3.5 h-3.5" />
                 <span className="font-bold">{user.gold}G</span>
               </div>
@@ -163,7 +149,7 @@ function LayoutShell() {
             <div className="relative">
               <button 
                 onClick={() => setShowNotifications(!showNotifications)}
-                className="relative p-2 rounded rpg-glass hover:border-rpg-gold text-gray-400 hover:text-rpg-gold transition-all cursor-pointer shadow-sm"
+                className="relative p-2.5 rounded-lg border border-rpg-border bg-rpg-dark/80 hover:border-rpg-gold text-gray-400 hover:text-rpg-gold transition-all cursor-pointer shadow-sm"
               >
                 <Bell className="w-4 h-4" />
                 {notifications.filter(n => !n.read).length > 0 && (
@@ -216,7 +202,7 @@ function LayoutShell() {
               )}
             </div>
           </div>
-        </header>
+        </div>
 
         <div className="flex-1 p-6 overflow-y-auto">
           <Routes>
