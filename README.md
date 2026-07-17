@@ -6,26 +6,76 @@ QuestDemics is an intelligent, autonomous learning agent and RPG progression sys
 
 ---
 
-## 🏗️ Decoupled Architecture
+## 🏗️ System Architecture
 
-QuestDemics is divided into three layers to ensure maintainability, testing, and scalability:
+```mermaid
+graph TD
+    %% Define Styles
+    classDef client fill:#3b82f6,stroke:#1d4ed8,stroke-width:1px,color:#fff;
+    classDef backend fill:#10b981,stroke:#047857,stroke-width:1px,color:#fff;
+    classDef core fill:#f59e0b,stroke:#d97706,stroke-width:1px,color:#fff;
+    classDef subagents fill:#8b5cf6,stroke:#6d28d9,stroke-width:1px,color:#fff;
+    classDef database fill:#ec4899,stroke:#be185d,stroke-width:1px,color:#fff;
+    classDef ai fill:#ef4444,stroke:#b91c1c,stroke-width:1px,color:#fff;
 
-```text
-                                EXPERIENCE LAYER (React)
-                     [Dashboard, Timer, Chat, Boss Arena, Analytics]
-                                           │
-                                           ▼ (REST APIs)
-                                APPLICATION LAYER (FastAPI)
-                       [Auth, CRUD, SQLModel DB, Cron Scheduler]
-                                           │
-                                           ▼ (AI Prompts & Vectors)
-                               INTELLIGENCE LAYER (Gemini 2.5)
-                   [Intent Parser, Quest Planner, Tutor RAG, Evaluator]
+    %% Nodes
+    Client["Web / Mobile App\n(React / Flutter Client)"]:::client
+    Backend["FastAPI Backend + LangGraph\n(AI Operating System)"]:::backend
+    
+    Supervisor["Supervisor Agent"]:::core
+    QuestEngine["Quest Engine"]:::core
+    NotifEngine["Notification Engine"]:::core
+
+    %% Agents
+    IntentAgent["Intent Agent"]:::subagents
+    PlannerAgent["Planner Agent"]:::subagents
+    TutorAgent["Tutor AI Agent"]:::subagents
+    ProgressAgent["Progress Agent"]:::subagents
+    FeedbackAgent["Feedback Agent"]:::subagents
+    JobChangeAgent["Job Change Agent"]:::subagents
+
+    XPEngine["XP & Level Engine"]:::core
+    RewardSystem["Reward / Gold System"]:::core
+
+    PostgreSQL[("PostgreSQL\n- Users\n- Goals\n- Daily Quests\n- Progress\n- XP\n- Gold\n- Achievements\n- Job Classes")]:::database
+    ChromaDB[("ChromaDB Vector Memory\n- Learning History\n- Uploaded PDFs\n- Notes\n- Video Transcripts\n- AI Summaries\n- Weak Concepts\n- Conversation Memory")]:::database
+
+    LLM["Gemini / GPT / Llama\n(Reasoning + Planning + RAG)"]:::ai
+
+    %% Connections
+    Client --> Backend
+    Backend --> Supervisor
+    Backend --> QuestEngine
+    Backend --> NotifEngine
+
+    Supervisor --> IntentAgent
+    Supervisor --> PlannerAgent
+    Supervisor --> TutorAgent
+    Supervisor --> ProgressAgent
+    Supervisor --> FeedbackAgent
+    Supervisor --> JobChangeAgent
+
+    IntentAgent --> XPEngine
+    PlannerAgent --> XPEngine
+    TutorAgent --> XPEngine
+    ProgressAgent --> XPEngine
+    FeedbackAgent --> XPEngine
+    JobChangeAgent --> XPEngine
+
+    XPEngine --> RewardSystem
+    
+    RewardSystem --> PostgreSQL
+    RewardSystem --> ChromaDB
+
+    PostgreSQL --> LLM
+    ChromaDB --> LLM
 ```
 
+QuestDemics is structured to ensure maintainability, testing, and scalability:
+
 1. **Experience Layer (Frontend):** React + Vite, TypeScript, Tailwind CSS, Framer Motion, Zustand, React Router, and Lucide Icons.
-2. **Application Layer (Backend):** FastAPI, SQLite (SQLModel/SQLAlchemy ORM), and JWT auth utilities.
-3. **Intelligence Layer (AI Agents):** Google Gemini 2.5 API with custom pure-Python local Vector Indexing (RAG).
+2. **Application Layer (Backend):** FastAPI, SQLite/PostgreSQL (SQLModel/SQLAlchemy ORM), and JWT auth utilities.
+3. **Intelligence Layer (AI Agents):** LangGraph with Gemini, GPT, or Llama models, featuring custom Vector Indexing (RAG).
 
 ---
 
@@ -37,7 +87,7 @@ QuestDemics is divided into three layers to ensure maintainability, testing, and
 - **Recovery Quests:** Missing a daily quest triggers a lock on normal progression, requiring a review of past mistakes to restore the streak.
 - **Anti-Fatigue Gate:** If a Hunter trains for more than 6 hours in a single day, the System locks the workspace for 60 minutes for recovery.
 - **Boss Battles:** Replaces exams with 90-minute practical coding tasks. Your submission is graded by the AI against relocation criteria to unlock S-Rank eligibility.
-- **Gold & XP Shop:** Earn gold through quizzes and battles; spend it in the System Shop to unlockMind Maps, AI Cheat Sheets, or interview preparation materials.
+- **Gold & XP Shop:** Earn gold through quizzes and battles; spend it in the System Shop to unlock Mind Maps, AI Cheat Sheets, or interview preparation materials.
 
 ---
 
@@ -53,7 +103,7 @@ QuestDemics is divided into three layers to ensure maintainability, testing, and
 
 1. Navigate to the backend folder:
    ```bash
-   cd backend
+   cd webapp/backend
    ```
 
 2. Supply your Gemini credentials in `.env` (Copy from `.env.example`):
@@ -80,7 +130,7 @@ QuestDemics is divided into three layers to ensure maintainability, testing, and
 
 1. Open a new terminal and navigate to the frontend folder:
    ```bash
-   cd frontend
+   cd webapp/frontend
    ```
 
 2. Install npm dependencies:
@@ -101,27 +151,29 @@ QuestDemics is divided into three layers to ensure maintainability, testing, and
 ```text
 QuestDemics/
 │
-├── backend/
-│   ├── app/
-│   │   ├── agents/       # Intent Parsing, Quest Planning, and Tutor RAG agents
-│   │   ├── routes/       # Auth, Quests, Focus, Tutor, and Boss API routers
-│   │   ├── auth_utils.py # Password hashing and JWT generation
-│   │   ├── db.py         # SQLAlchemy connection managers
-│   │   ├── models.py     # SQLModel relational database definitions
-│   │   └── main.py       # FastAPI application entrypoint
-│   ├── requirements.txt  # Python package list
-│   └── run.py            # Backend starter script
+├── webapp/
+│   ├── backend/
+│   │   ├── app/       # Intent Parsing, Quest Planning, and Tutor RAG agents
+│   │   │   ├── agents/
+│   │   │   ├── routes/
+│   │   │   ├── auth_utils.py
+│   │   │   ├── db.py
+│   │   │   ├── models.py
+│   │   │   └── main.py
+│   │   ├── requirements.txt
+│   │   └── run.py
+│   │
+│   └── frontend/
+│       ├── src/
+│       │   ├── pages/
+│       │   ├── store.ts
+│       │   ├── App.tsx
+│       │   ├── index.css
+│       │   └── main.tsx
+│       ├── index.html
+│       ├── tailwind.config.js
+│       └── postcss.config.js
 │
-├── frontend/
-│   ├── src/
-│   │   ├── pages/        # Login, Onboarding, Dashboard, Timer, Chat, Boss, Analytics
-│   │   ├── store.ts      # Zustand state container with simulated fallback
-│   │   ├── App.tsx       # Routing and dashboard HUD layouts
-│   │   ├── index.css     # Tailwind imports and premium RPG custom scrollbars
-│   │   └── main.tsx      # React DOM bootstrap
-│   ├── index.html        # Main template including Google Fonts import
-│   ├── tailwind.config.js# Custom color palettes and RPG shadow glows
-│   └── postcss.config.js # PostCSS rules
-│
-└── README.md             # Project documentation
+├── netlify.toml
+└── README.md
 ```
