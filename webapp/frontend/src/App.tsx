@@ -30,6 +30,7 @@ function LayoutShell() {
   const navigate = useNavigate();
   const location = useLocation();
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
 
   useEffect(() => {
     fetchRoadmap();
@@ -55,104 +56,109 @@ function LayoutShell() {
     { name: 'AI Coach', path: '/coach', icon: Brain },
   ];
 
+  const activeItem = menuItems.find(item => item.path === location.pathname) || menuItems[0];
   const xpNeeded = user.level * 1000;
   const xpPercentage = Math.min((user.xp / xpNeeded) * 100, 100);
 
   return (
-    <div className="min-h-screen bg-rpg-bg holo-bg holo-flicker text-gray-200 flex flex-col md:flex-row relative overflow-hidden">
+    <div className="h-screen bg-rpg-bg holo-bg holo-flicker text-gray-200 flex flex-col relative overflow-hidden">
       <ElectricBackground />
       <BlueprintBackground />
       <div className="holo-scanline" />
       
-      {/* SIDEBAR NAVIGATION */}
-      <aside className="w-full md:w-64 bg-rpg-dark/70 md:bg-rpg-dark/45 border-b md:border-b-0 md:border-r border-rpg-border flex flex-col shrink-0">
-        
-        {/* Logo Banner */}
-        <div className="p-5 border-b border-rpg-border flex items-center gap-3">
-          <div className="p-1.5 rounded bg-rpg-dark border border-rpg-gold text-rpg-gold shadow-rpg-glow">
-            <Shield className="w-5 h-5 animate-pulse" />
-          </div>
-          <div>
-            <h1 className="text-sm font-extrabold tracking-widest text-white uppercase">
-              QuestDemics
-            </h1>
-            <span className="text-[9px] font-mono text-rpg-gold uppercase tracking-wider block">
-              System Active
-            </span>
-          </div>
-        </div>
-
-        {/* User Mini HUD in Sidebar (for desktop) */}
-        <div className="p-4 border-b border-rpg-border/60 bg-rpg-dark/20 hidden md:block">
-          <div className="flex justify-between items-center text-xs font-mono text-gray-400 mb-1.5">
-            <span>LEVEL {user.level}</span>
-            <span className="text-rpg-gold font-bold">{user.rank}</span>
-          </div>
-          <div className="w-full bg-rpg-dark h-2 rounded border border-rpg-border overflow-hidden p-[1px]">
-            <div 
-              style={{ width: `${xpPercentage}%` }}
-              className="bg-gradient-to-r from-rpg-xp to-indigo-500 h-full rounded shadow-xp-glow"
-            />
-          </div>
-          <div className="flex justify-between text-[9px] font-mono text-gray-500 mt-2">
-            <span className="flex items-center gap-1">
-              <Flame className="w-3.5 h-3.5 text-orange-500" /> {user.streak} Days
-            </span>
-            <span>{user.gold} Gold</span>
-          </div>
-        </div>
-
-        {/* Menu Options */}
-        <nav className="flex-1 p-4 space-y-1.5">
-          {menuItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = location.pathname === item.path;
-            return (
-              <Link
-                key={item.name}
-                to={item.path}
-                className={`flex items-center justify-between p-3 rounded text-xs uppercase tracking-wider font-extrabold transition-all border ${
-                  isActive 
-                    ? 'bg-rpg-card text-rpg-gold border-rpg-gold shadow-rpg-glow' 
-                    : 'bg-transparent text-gray-400 border-transparent hover:text-white hover:bg-rpg-dark/30'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <Icon className="w-4 h-4" />
-                  <span>{item.name}</span>
-                </div>
-                {isActive && <ChevronRight className="w-4 h-4" />}
-              </Link>
-            );
-          })}
-        </nav>
-
-        {/* Logout Footer */}
-        <div className="p-4 border-t border-rpg-border">
-          <button
-            onClick={logout}
-            className="w-full flex items-center justify-center gap-2 p-2.5 bg-rpg-dark hover:bg-red-950/20 border border-rpg-border hover:border-red-500/40 text-gray-400 hover:text-red-400 rounded text-xs uppercase font-mono tracking-wider transition-all"
-          >
-            <LogOut className="w-4 h-4" />
-            <span>Terminate Link</span>
-          </button>
-        </div>
-
-      </aside>
-
       {/* MAIN VIEW CONTENT WORKSPACE */}
-      <main className="flex-1 overflow-y-auto bg-rpg-bg flex flex-col">
+      <main className="flex-1 flex flex-col overflow-hidden bg-rpg-bg">
         
         {/* TOP HUD HEADER BAR */}
         <header className="bg-rpg-dark/60 border-b border-rpg-border p-4 flex justify-between items-center relative z-40">
-          <div>
-            <h2 className="text-xs font-bold text-rpg-gold tracking-widest uppercase">
-              {user.class_name}
-            </h2>
-            <span className="text-[9px] text-gray-500 font-mono uppercase tracking-wider block">HUNTER SPECIALIZATION</span>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <div className="p-1.5 rounded bg-rpg-dark border border-rpg-gold text-rpg-gold shadow-rpg-glow">
+                <Shield className="w-5 h-5 animate-pulse" />
+              </div>
+              <div className="hidden sm:block">
+                <h1 className="text-sm font-extrabold tracking-widest text-white uppercase">
+                  QuestDemics
+                </h1>
+                <span className="text-[9px] font-mono text-rpg-gold uppercase tracking-wider block">
+                  System Active
+                </span>
+              </div>
+            </div>
+
+            {/* SCREEN SWITCHER BUTTON (ROUNDED RECTANGLE) */}
+            <div className="relative">
+              <button 
+                onClick={() => setShowMenu(!showMenu)}
+                className="px-4 py-2 bg-rpg-dark/90 hover:bg-rpg-card border border-rpg-gold text-rpg-gold rounded-lg font-bold text-xs uppercase tracking-wider font-sans cursor-pointer shadow-rpg-glow flex items-center gap-2 transition-all"
+              >
+                <Compass className="w-4 h-4 animate-spin-slow" />
+                <span>Menu: {activeItem.name}</span>
+                <span className="text-[9px] opacity-75">▼</span>
+              </button>
+              
+              {showMenu && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setShowMenu(false)} />
+                  <div className="absolute left-0 mt-2 w-64 bg-rpg-dark/95 border border-rpg-border rounded-lg shadow-2xl p-2 z-50 divide-y divide-rpg-border/40 max-h-[80vh] overflow-y-auto backdrop-blur-md">
+                    <div className="py-1 space-y-1">
+                      {menuItems.map((item) => {
+                        const Icon = item.icon;
+                        const isActive = location.pathname === item.path;
+                        return (
+                          <Link
+                            key={item.name}
+                            to={item.path}
+                            onClick={() => setShowMenu(false)}
+                            className={`flex items-center justify-between p-2.5 rounded-md text-[11px] uppercase tracking-wider font-extrabold transition-all border ${
+                              isActive 
+                                ? 'bg-rpg-card text-rpg-gold border-rpg-gold/60 shadow-rpg-glow' 
+                                : 'bg-transparent text-gray-400 border-transparent hover:text-white hover:bg-rpg-dark/60'
+                            }`}
+                          >
+                            <div className="flex items-center gap-2.5">
+                              <Icon className="w-4 h-4" />
+                              <span>{item.name}</span>
+                            </div>
+                            {isActive && <ChevronRight className="w-3.5 h-3.5" />}
+                          </Link>
+                        );
+                      })}
+                    </div>
+                    <div className="pt-2 mt-1">
+                      <button
+                        onClick={() => {
+                          setShowMenu(false);
+                          logout();
+                        }}
+                        className="w-full flex items-center justify-center gap-2 p-2 bg-rpg-dark hover:bg-red-950/20 border border-rpg-border hover:border-red-500/40 text-gray-400 hover:text-red-400 rounded-md text-[10px] uppercase font-mono tracking-wider transition-all cursor-pointer"
+                      >
+                        <LogOut className="w-3.5 h-3.5" />
+                        <span>Terminate Link</span>
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
           
           <div className="flex items-center gap-4">
+            {/* Quick Stats Panel */}
+            <div className="flex items-center gap-3 text-[11px] font-mono bg-rpg-dark/80 border border-rpg-border/80 px-3 py-1.5 rounded">
+              <div className="flex items-center gap-1">
+                <Flame className="w-3.5 h-3.5 text-orange-500" />
+                <span className="text-gray-300 font-bold">{user.streak}D</span>
+              </div>
+              <div className="w-px h-3 bg-rpg-border" />
+              <div className="flex items-center gap-1 text-rpg-gold">
+                <ShoppingBag className="w-3.5 h-3.5" />
+                <span className="font-bold">{user.gold}G</span>
+              </div>
+              <div className="w-px h-3 bg-rpg-border" />
+              <div className="text-rpg-xp font-bold">LV {user.level}</div>
+            </div>
+
             {/* Notifications Droptray */}
             <div className="relative">
               <button 
@@ -209,25 +215,10 @@ function LayoutShell() {
                 </div>
               )}
             </div>
-            
-            {/* Quick Stats Panel */}
-            <div className="flex items-center gap-3 text-[11px] font-mono bg-rpg-dark/80 border border-rpg-border/80 px-3 py-1.5 rounded">
-              <div className="flex items-center gap-1">
-                <Flame className="w-3.5 h-3.5 text-orange-500" />
-                <span className="text-gray-300 font-bold">{user.streak}D</span>
-              </div>
-              <div className="w-px h-3 bg-rpg-border" />
-              <div className="flex items-center gap-1 text-rpg-gold">
-                <ShoppingBag className="w-3.5 h-3.5" />
-                <span className="font-bold">{user.gold}G</span>
-              </div>
-              <div className="w-px h-3 bg-rpg-border" />
-              <div className="text-rpg-xp font-bold">LV {user.level}</div>
-            </div>
           </div>
         </header>
 
-        <div className="flex-1 p-6">
+        <div className="flex-1 p-6 overflow-y-auto">
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/status" element={<StatusScreen />} />
