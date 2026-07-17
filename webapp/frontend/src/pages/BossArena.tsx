@@ -75,29 +75,29 @@ export default function BossArena() {
 
   return (
     <HologramFrame maxWidth="max-w-7xl">
-      <div className="space-y-6 font-mono pb-16 text-cyan-100">
+      <div className="space-y-4 font-mono pb-2 text-cyan-100">
         
-        {/* HEADER CARD */}
-        <div className="holo-panel holo-panel-brackets p-6 rounded-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative overflow-hidden shadow-[0_0_20px_rgba(239,68,68,0.15)] border-red-500/40">
+        {/* HEADER CARD (COMPACT) */}
+        <div className="holo-panel holo-panel-brackets p-3 rounded-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 relative overflow-hidden shadow-[0_0_15px_rgba(239,68,68,0.15)] border-red-500/40">
           <div className="absolute inset-0 bg-red-950/5 pointer-events-none animate-pulse" />
           <div className="space-y-1 relative z-10">
             <div className="flex items-center gap-2">
-              <span className="bg-red-950/40 text-red-400 border border-red-500/30 text-[9px] uppercase font-extrabold px-2 py-0.5 rounded-sm">
+              <span className="bg-red-950/40 text-red-400 border border-red-500/30 text-[8px] uppercase font-extrabold px-1.5 py-0.5 rounded-sm">
                 DUNGEON BOSS BATTLE
               </span>
-              <span className="text-[9px] text-cyan-500/50 uppercase tracking-widest font-bold">Tier Assessment</span>
+              <span className="text-[8px] text-cyan-500/50 uppercase tracking-widest font-bold">Tier Assessment</span>
             </div>
-            <h2 className="text-xl font-extrabold uppercase text-white tracking-wide drop-shadow-[0_0_8px_rgba(239,68,68,0.4)]">{bossBattle.title}</h2>
-            <p className="text-xs text-gray-400 max-w-2xl leading-normal">{bossBattle.description}</p>
+            <h2 className="text-lg font-extrabold uppercase text-white tracking-wide drop-shadow-[0_0_6px_rgba(239,68,68,0.3)] leading-none">{bossBattle.title}</h2>
+            <p className="text-[10px] text-gray-400 max-w-2xl leading-snug line-clamp-1">{bossBattle.description}</p>
           </div>
 
           {/* Time remaining counter */}
           {bossBattle.status === 'ACTIVE' && !evaluationResult && (
-            <div className="bg-slate-950/80 border border-red-500/40 px-5 py-3 rounded-sm flex items-center gap-3 shadow-[0_0_12px_rgba(239,68,68,0.2)] shrink-0 relative z-10">
-              <Clock className="w-5 h-5 text-red-500 animate-pulse" />
+            <div className="bg-slate-950/80 border border-red-500/40 px-3 py-1.5 rounded-sm flex items-center gap-2.5 shadow-[0_0_10px_rgba(239,68,68,0.2)] shrink-0 relative z-10">
+              <Clock className="w-4 h-4 text-red-500 animate-pulse" />
               <div>
-                <span className="text-[8px] text-gray-500 uppercase block font-bold tracking-wider">Countdown Time</span>
-                <span className="text-lg font-extrabold tracking-wider text-red-500">
+                <span className="text-[7px] text-gray-500 uppercase block font-bold tracking-wider leading-none mb-0.5">Countdown</span>
+                <span className="text-sm font-extrabold tracking-wider text-red-500 leading-none">
                   {formatTimer(timeLeft)}
                 </span>
               </div>
@@ -105,10 +105,10 @@ export default function BossArena() {
           )}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           
           {/* LEFT COLUMN: Workspace/Submit or Results */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-4">
             <AnimatePresence mode="wait">
               {!evaluationResult ? (
                 <motion.div 
@@ -116,12 +116,12 @@ export default function BossArena() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="holo-panel rounded-sm flex flex-col overflow-hidden h-[500px]"
+                  className="holo-panel rounded-sm flex flex-col overflow-hidden h-[340px]"
                 >
                   {/* Workspace Header */}
-                  <div className="bg-slate-950 p-3 border-b border-cyan-500/20 flex justify-between items-center text-xs font-mono text-cyan-500/60 uppercase font-bold tracking-wider">
+                  <div className="bg-slate-950 p-2 border-b border-cyan-500/20 flex justify-between items-center text-[10px] font-mono text-cyan-500/60 uppercase font-bold tracking-wider">
                     <div className="flex items-center gap-1.5 text-cyan-400">
-                      <Code className="w-4 h-4" />
+                      <Code className="w-3.5 h-3.5" />
                       <span>Hunter Code Workspace (Python/SQLModel)</span>
                     </div>
                     <span>UTF-8 Buffer</span>
@@ -130,31 +130,28 @@ export default function BossArena() {
                   {/* Textarea Codebox */}
                   <textarea
                     placeholder={`# Write your solution code here.
-# Include SQLAlchemy database connection setups, Relational schema declarations,
-# Pydantic schemas, and FastAPI endpoints.
-# The System will perform an automated logical review.
-
+# Include database setups, schema declarations, and FastAPI endpoints.
 from sqlmodel import SQLModel, Field, create_engine
 ...`}
                     value={code}
                     onChange={(e) => setCode(e.target.value)}
-                    className="flex-1 bg-slate-950/20 p-4 text-xs font-mono text-gray-200 outline-none resize-none leading-relaxed border-none focus:ring-0 select-text"
+                    className="flex-1 bg-slate-950/20 p-3 text-[11px] font-mono text-gray-200 outline-none resize-none leading-relaxed border-none focus:ring-0 select-text"
                   />
 
                   {/* Submission Actions */}
-                  <div className="p-3 border-t border-cyan-500/20 bg-slate-950 flex justify-between items-center">
-                    <span className="text-[9px] text-cyan-500/50 uppercase font-bold tracking-wider">Ensure code contains required parameters</span>
+                  <div className="p-2 border-t border-cyan-500/20 bg-slate-950 flex justify-between items-center">
+                    <span className="text-[8px] text-cyan-500/50 uppercase font-bold tracking-wider">Check required specs before conceiving</span>
                     <button
                       onClick={handleSubmit}
                       disabled={isEvaluating || !code.trim() || timeLeft <= 0}
-                      className="bg-red-950/40 hover:bg-red-900 border border-red-500/50 hover:border-red-500 text-red-200 font-extrabold py-2 px-6 rounded-sm text-xs uppercase tracking-widest shadow-[0_0_10px_rgba(239,68,68,0.25)] flex items-center gap-2 transition-all disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
+                      className="bg-red-950/40 hover:bg-red-900 border border-red-500/50 hover:border-red-500 text-red-200 font-extrabold py-1 px-4 rounded-sm text-[10px] uppercase tracking-widest shadow-[0_0_8px_rgba(239,68,68,0.25)] flex items-center gap-1.5 transition-all disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
                     >
                       {isEvaluating ? (
-                        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                        <RefreshCw className="w-3 animate-spin" />
                       ) : (
-                        <Zap className="w-3.5 h-3.5 text-red-200" />
+                        <Zap className="w-3 h-3 text-red-200" />
                       )}
-                      <span>{isEvaluating ? 'Evaluating Code...' : 'Conceive Submission'}</span>
+                      <span>{isEvaluating ? 'Evaluating...' : 'Conceive Submission'}</span>
                     </button>
                   </div>
                 </motion.div>
@@ -163,44 +160,44 @@ from sqlmodel import SQLModel, Field, create_engine
                   key="results"
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className={`holo-panel rounded-sm p-6 border-2 space-y-4 ${
+                  className={`holo-panel rounded-sm p-4 border-2 space-y-3 ${
                     evaluationResult.passed ? 'border-green-500/40 bg-green-950/15' : 'border-red-500/40 bg-red-950/15'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className={`p-3 rounded border ${
+                    <div className={`p-2 rounded border ${
                       evaluationResult.passed ? 'bg-green-950/40 text-green-400 border-green-500/40' : 'bg-red-950/40 text-red-400 border-red-500/40'
                     }`}>
-                      {evaluationResult.passed ? <ShieldCheck className="w-8 h-8" /> : <ShieldAlert className="w-8 h-8" />}
+                      {evaluationResult.passed ? <ShieldCheck className="w-6 h-6" /> : <ShieldAlert className="w-6 h-6" />}
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold uppercase tracking-wider text-white font-mono drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]">
+                      <h3 className="text-base font-bold uppercase tracking-wider text-white font-mono drop-shadow-[0_0_6px_rgba(255,255,255,0.2)] leading-none">
                         {evaluationResult.passed ? 'VICTORY: BOSS CONQUERED' : 'DEFEAT: PARAMETER FAIL'}
                       </h3>
-                      <p className="text-xs text-gray-500 font-mono mt-0.5 uppercase tracking-wider">
+                      <p className="text-[10px] text-gray-500 font-mono mt-1 uppercase tracking-wider leading-none">
                         System Evaluation Score: <span className="font-extrabold text-white">{evaluationResult.score}%</span>
                       </p>
                     </div>
                   </div>
 
-                  <div className="bg-slate-950 p-4 rounded border border-cyan-500/20 text-xs leading-relaxed text-gray-300 font-mono whitespace-pre-wrap select-text">
+                  <div className="bg-slate-950 p-3 rounded border border-cyan-500/20 text-[10px] leading-relaxed text-gray-300 font-mono whitespace-pre-wrap select-text max-h-[160px] overflow-y-auto">
                     {evaluationResult.feedback}
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3 text-xs font-mono py-1">
-                    <div className="bg-slate-950/40 p-3 rounded border border-cyan-500/25">
+                  <div className="grid grid-cols-2 gap-3 text-[10px] font-mono py-0.5">
+                    <div className="bg-slate-950/40 p-2 rounded border border-cyan-500/20">
                       <span className="text-gray-500 block uppercase text-[8px] font-bold">XP Gained</span>
-                      <span className="text-sm font-bold text-cyan-400">+{evaluationResult.xp_earned} XP</span>
+                      <span className="text-xs font-bold text-cyan-400">+{evaluationResult.xp_earned} XP</span>
                     </div>
-                    <div className="bg-slate-950/40 p-3 rounded border border-cyan-500/25">
+                    <div className="bg-slate-950/40 p-2 rounded border border-cyan-500/20">
                       <span className="text-gray-500 block uppercase text-[8px] font-bold">Gold Wealth</span>
-                      <span className="text-sm font-bold text-cyan-400">+{evaluationResult.gold_earned} G</span>
+                      <span className="text-xs font-bold text-cyan-400">+{evaluationResult.gold_earned} G</span>
                     </div>
                   </div>
 
                   <button
                     onClick={() => navigate('/')}
-                    className="w-full bg-cyan-950/20 hover:bg-cyan-950/40 border border-cyan-500/30 hover:border-cyan-400 text-cyan-400 py-3 rounded-sm font-bold text-xs uppercase tracking-widest transition-all cursor-pointer"
+                    className="w-full bg-cyan-950/20 hover:bg-cyan-950/40 border border-cyan-500/30 hover:border-cyan-400 text-cyan-400 py-2 rounded-sm font-bold text-[10px] uppercase tracking-widest transition-all cursor-pointer"
                   >
                     Conclude Boss Arena & Claim Rewards
                   </button>
@@ -210,42 +207,42 @@ from sqlmodel import SQLModel, Field, create_engine
           </div>
 
           {/* RIGHT COLUMN: Requirements & Details */}
-          <div className="space-y-6 font-mono text-xs">
+          <div className="space-y-4 font-mono text-[11px] h-full flex flex-col justify-between">
             
             {/* Boss requirements list */}
-            <div className="holo-panel p-5 rounded-sm space-y-4 bg-slate-950/40">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-2 border-b border-cyan-500/25 pb-2">
-                <Trophy className="w-4 h-4 text-cyan-400" />
+            <div className="holo-panel p-4 rounded-sm space-y-3 bg-slate-950/40 flex-1 flex flex-col">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-1.5 border-b border-cyan-500/25 pb-1.5">
+                <Trophy className="w-3.5 h-3.5 text-cyan-400" />
                 <span>Assessment Specs</span>
               </h3>
 
-              <div className="space-y-3">
+              <div className="space-y-2 max-h-[170px] overflow-y-auto pr-1 flex-1">
                 {bossBattle.content?.requirements?.map((req: string, idx: number) => (
-                  <div key={idx} className="flex gap-2.5 items-start bg-slate-950/60 border border-cyan-500/25 p-3 rounded-sm">
-                    <ChevronRight className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
-                    <span className="text-gray-300 leading-normal">{req}</span>
+                  <div key={idx} className="flex gap-2 items-start bg-slate-950/60 border border-cyan-500/20 p-2.5 rounded-sm">
+                    <ChevronRight className="w-3.5 h-3.5 text-cyan-400 shrink-0 mt-0.5" />
+                    <span className="text-gray-300 leading-snug">{req}</span>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Reward Specs */}
-            <div className="holo-panel p-5 rounded-sm space-y-3 bg-slate-950/40">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-cyan-400 border-b border-cyan-500/25 pb-2">
+            <div className="holo-panel p-4 rounded-sm space-y-2 bg-slate-950/40">
+              <h3 className="text-[10px] font-bold uppercase tracking-wider text-cyan-400 border-b border-cyan-500/25 pb-1">
                 Conquer Loot Rewards
               </h3>
-              <div className="grid grid-cols-2 gap-3 pt-2">
-                <div className="bg-slate-950/60 p-2.5 rounded border border-cyan-500/20 text-center">
+              <div className="grid grid-cols-2 gap-2">
+                <div className="bg-slate-950/60 p-2 rounded border border-cyan-500/20 text-center">
                   <span className="text-[8px] text-gray-500 block uppercase font-bold">XP Loot</span>
-                  <span className="text-sm font-bold text-cyan-400">+{bossBattle.xp_reward} XP</span>
+                  <span className="text-xs font-bold text-cyan-400">+{bossBattle.xp_reward} XP</span>
                 </div>
-                <div className="bg-slate-950/60 p-2.5 rounded border border-cyan-500/20 text-center">
+                <div className="bg-slate-950/60 p-2 rounded border border-cyan-500/20 text-center">
                   <span className="text-[8px] text-gray-500 block uppercase font-bold">Gold Loot</span>
-                  <span className="text-sm font-bold text-cyan-400">+{bossBattle.gold_reward} G</span>
+                  <span className="text-xs font-bold text-cyan-400">+{bossBattle.gold_reward} G</span>
                 </div>
               </div>
-              <div className="text-[8px] text-cyan-550/40 text-center pt-2 leading-relaxed uppercase">
-                Provides immediate rank upgrade eligibility parameters to S-Rank.
+              <div className="text-[8px] text-cyan-500/40 text-center leading-relaxed uppercase">
+                Provides S-Rank eligibility upgrade.
               </div>
             </div>
 
