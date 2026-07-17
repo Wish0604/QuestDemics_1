@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useAppStore } from '../store';
+import { useAppStore, API_URL } from '../store';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Upload, Sparkles, AlertCircle, BookOpen, CheckCircle, XCircle, RefreshCw } from 'lucide-react';
 import HologramFrame from '../components/HologramFrame';
@@ -81,7 +82,7 @@ export default function TutorArena() {
     
     try {
       const difficulty = user?.level && user.level >= 15 ? 'Advanced' : 'Intermediate';
-      const response = await fetch(`http://localhost:8000/api/tutor/quiz?topic=${encodeURIComponent(quizTopic)}&difficulty=${difficulty}`, {
+      const response = await fetch(`${API_URL}/tutor/quiz?topic=${encodeURIComponent(quizTopic)}&difficulty=${difficulty}`, {
         headers: localStorage.getItem('questdemics_token') ? { 'Authorization': `Bearer ${localStorage.getItem('questdemics_token')}` } : {}
       });
       
@@ -135,7 +136,7 @@ export default function TutorArena() {
       const score = Math.round((correctCount / activeQuiz.questions.length) * 100);
       
       try {
-        const response = await fetch(`http://localhost:8000/api/tutor/quiz/submit`, {
+        const response = await fetch(`${API_URL}/tutor/quiz/submit`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

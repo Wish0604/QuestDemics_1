@@ -1,7 +1,9 @@
 import { create } from 'zustand';
 
 // API Base URL
-const API_URL = 'http://localhost:8000/api';
+export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+
+
 
 export interface Hunter {
   id: number;
